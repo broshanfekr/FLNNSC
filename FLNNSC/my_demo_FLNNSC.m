@@ -10,16 +10,17 @@ addpath(genpath('../util'))
 addpath(genpath('../performance'))
 
 %load USPS_1000.mat
-load cifar100.mat
-dataset_name = "cifar100";
+dataset_name = "fashionmnist";
+data_path = strcat(dataset_name, ".mat");
+load(data_path)
 
 %%
-FEA = zeros(size(fea, 1), 32*32);
+FEA = zeros(size(fea, 1), size(fea, 2)*size(fea, 3));
 for i = 1:size(fea, 1)
    tmp_img = fea(i, :, :, :);
    tmp_img = squeeze(tmp_img);
    tmp_img = rgb2gray(tmp_img);
-   tmp_img = reshape(double(tmp_img), 1, 32*32);
+   tmp_img = reshape(double(tmp_img), 1, size(fea, 2)*size(fea, 3));
    FEA(i, :) = tmp_img(1,:);
 end
 fea = FEA;
@@ -73,6 +74,12 @@ gamma = 2
 Range = [1e-4,1e-3,1e-2,1e-1,1e0,1e1,1e2,1e3,1e4];
 if exist(dataset_name+"_clip.mat")
     load(dataset_name+"_clip.mat")
+
+    % Find the maximum value and its linear index
+    [maxValue, linearIdx] = max(NMI(:));
+    % Convert linear index to row and column indices
+    [row, col] = ind2sub(size(NMI), linearIdx);
+    fprintf("ACC is: %.2f    NMI is: %.2f    ARI is: %.2f\n", CA(row, col)*100, NMI(row, col)*100, AR(row, col)*100)
 else
     CA = zeros(length(Range));
     NMI = zeros(length(Range));
@@ -102,4 +109,5 @@ for i_alpha = 1:length(Range)
 end
 
 save(dataset_name+"_clip.mat", 'CA', "F1", "AR", "NMI")
+
 
