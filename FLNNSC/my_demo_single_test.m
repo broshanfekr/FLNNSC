@@ -80,6 +80,7 @@ end
 %%
 
 
+
 tic
 [Z,W,H,obj] = FLNNSC(data,para,maxIter,tol);
 toc
