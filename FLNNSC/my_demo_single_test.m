@@ -9,6 +9,9 @@ addpath(genpath(data_dir));
 addpath(genpath('../util'))
 addpath(genpath('../performance'))
 
+addpath("measure");
+addpath("util");
+
 %load USPS_1000.mat
 dataset_name = "stl10";
 data_path = strcat(dataset_name, ".mat");
@@ -75,6 +78,8 @@ else
 end
 
 %%
+
+
 tic
 [Z,W,H,obj] = FLNNSC(data,para,maxIter,tol);
 toc
